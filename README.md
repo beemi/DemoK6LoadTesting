@@ -2,6 +2,18 @@
 
 This repository contains performance tests to be executed by [TestKube](https://testkube.io/).  Publishing test results to [Prometheus](https://prometheus.io/) and visualizing them in [Grafana](https://grafana.com/) is supported.
 
+## 📝 Installation
+
+MacOS
+
+```bash
+brew install k6
+```
+check version
+```bash
+k6 version
+```
+Check the [releases](https://github.com/grafana/k6/releases) page for different versions of k6.
 
 Run K6 scripts to publish metrics to Prometheus
 
@@ -23,6 +35,20 @@ K6_PROMETHEUS_RW_SERVER_URL
 more details [here](https://k6.io/docs/results-output/real-time/prometheus-remote-write/) how to write metrics from K6 to Prometheus
 
 more details [here](https://k6.io/docs/using-k6/k6-options/reference/#loki) how to write logs from K6 to Loki
+
+Run K6 browser based scripts to publish metrics to Prometheus
+
+```bash
+K6_PROMETHEUS_RW_SERVER_URL=http://localhost:9090/api/v1/write \
+K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true \
+K6_PROMETHEUS_RW_INSECURE_SKIP_TLS_VERIFY=true \
+K6_PROMETHEUS_RW_STALE_MARKERS=true \
+K6_BROWSER_HEADLESS=false
+k6 run \
+-o experimental-prometheus-rw \
+tests/browser-test.js
+```
+
 
 ## 🔨 Running Loki, Prometheus and Grafana Locally
 
