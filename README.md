@@ -48,7 +48,9 @@ k6 run \
 -o experimental-prometheus-rw \
 tests/browser-test.js
 ```
+K6 browser tests documentation
 
+https://github.com/grafana/xk6-browser
 
 ## 🔨 Running Loki, Prometheus and Grafana Locally
 
