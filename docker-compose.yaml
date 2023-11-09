@@ -1,0 +1,82 @@
+version: '3.7'
+
+x-common-attributes: &common-attributes
+  restart: unless-stopped
+  networks:
+    - monitoring
+  labels:
+    org.label-schema.group: "monitoring"
+
+services:
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    <<: *common-attributes
+    volumes:
+      - ./loki:/etc/loki
+      - loki_data:/loki
+    command:
+      - '-config.file=/etc/loki/loki-config.yaml'
+    ports:
+      - "3100:3100"
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    <<: *common-attributes
+    volumes:
+      - ./promtail:/etc/promtail
+      - /var/log:/var/log
+    command:
+      - '-config.file=/etc/promtail/promtail-config.yaml'
+    depends_on:
+      - loki
+    ports:
+      - "9080:9080"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    <<: *common-attributes
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--web.enable-remote-write-receiver'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+      - '--enable-feature=native-histograms'
+    ports:
+      - "9090:9090"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    <<: *common-attributes
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-volume:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin  # Change this to a secure password or use secrets
+
+networks:
+  monitoring:
+
+volumes:
+  grafana-volume:
+  prometheus_data:
+  loki_data:
+

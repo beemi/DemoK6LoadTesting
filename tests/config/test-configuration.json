@@ -1,0 +1,8 @@
+{
+  "dev": {
+    "baseUrl": "https://spacex-production.up.railway.app/"
+  },
+  "prod": {
+    "baseUrl": "https://spacex-production.up.railway.app/"
+  }
+}
