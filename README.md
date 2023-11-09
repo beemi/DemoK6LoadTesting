@@ -12,7 +12,7 @@ K6_PROMETHEUS_RW_INSECURE_SKIP_TLS_VERIFY=true \
 K6_PROMETHEUS_RW_STALE_MARKERS=true \
 k6 run \
 -o experimental-prometheus-rw \
---log-output=loki=http://localhost:3100/loki/api/v1/push,label.loadtest=k6,limit=1000,pushPeriod=5m32s,msgMaxSize=1231,level=trace \
+--log-output=loki=http://localhost:3100/loki/api/v1/push,label.loadtest=k6,limit=1000,pushPeriod=1m,msgMaxSize=1231,level=trace \
 tests/script.js
 ```
 
