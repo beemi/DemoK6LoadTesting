@@ -81,8 +81,6 @@ Loki will be available by navigating to the Grafana under explorer section.
 
 ![image](docs/img_8.png)
 
-```
-
 ### Stopping the Services
 
 To stop the services, run the following command:
